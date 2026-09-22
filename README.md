@@ -9,7 +9,7 @@
 <br>
 <strong>SIGGRAPH Asia 2026</strong>
 <br>
-<strong><a href="https://yiboz2001.github.io/">Yibo Zhang</a><sup>1,2</sup></strong>,
+<strong>Yibo Zhang<sup>1,2</sup></strong>,
 Ze Yuan<sup>3</sup>,
 Nan Cao<sup>4,2</sup>,
 Li Zhang<sup>5,2</sup>,
