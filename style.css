@@ -130,22 +130,6 @@ sup { font-size: 0.7em; font-weight: 400; }
 }
 .btn:hover { background: #fff; color: var(--fg); border-color: var(--fg); }
 
-.hero-video {
-  margin: 40px auto 0;
-  max-width: 960px;
-  aspect-ratio: 16 / 9;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  overflow: hidden;
-  background: #000;
-}
-.hero-video iframe {
-  display: block;
-  width: 100%;
-  height: 100%;
-  border: 0;
-}
-
 /* ---------- sections ---------- */
 .section { padding: 62px 0; border-top: 1px solid var(--line); }
 .section.alt { background: var(--bg-alt); }
