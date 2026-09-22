@@ -82,7 +82,9 @@ Access is gated. Please request access on the Hugging Face page and respect the 
   booktitle = {SIGGRAPH Asia 2026 Conference Papers},
   year      = {2026},
   address   = {Kuala Lumpur, Malaysia},
-  doi       = {10.1145/3829340.3842299}
+  publisher = {Association for Computing Machinery},
+  doi       = {10.1145/3829340.3842299},
+  url       = {https://doi.org/10.1145/3829340.3842299}
 }
 ```
 
