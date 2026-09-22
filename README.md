@@ -44,11 +44,11 @@ Feel free to contact me ([ybzhang23@mails.jlu.edu.cn](mailto:ybzhang23@mails.jlu
 ## News
 
 - [2026-09-22] Paper available on [arXiv](https://arxiv.org/abs/2609.23169).
-- [2026-09-22] Project page, code placeholder, and [G-buffer TexVerse](https://huggingface.co/datasets/YiboZhang2001/G-buffer-TexVerse) dataset card released.
+- [2026-09-22] [Project page](https://yiboz2001.github.io/UltraTex/) and [G-buffer TexVerse](https://huggingface.co/datasets/YiboZhang2001/G-buffer-TexVerse) released.
 
 ## Code
 
-Training and inference code will be released here. This repository currently hosts the [project page](https://yiboz2001.github.io/UltraTex/).
+Training and inference code will be released here.
 
 ## G-buffer TexVerse
 
