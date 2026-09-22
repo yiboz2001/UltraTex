@@ -70,8 +70,6 @@ Per-view outputs include shading normals (camera & world), canonical coordinate 
 
 **Download:** [https://huggingface.co/datasets/YiboZhang2001/G-buffer-TexVerse](https://huggingface.co/datasets/YiboZhang2001/G-buffer-TexVerse)
 
-Access is gated. Please request access on the Hugging Face page and respect the original Creative Commons licenses of the source Sketchfab assets (same policy as TexVerse).
-
 ## Citation
 
 ```bibtex
@@ -82,12 +80,11 @@ Access is gated. Please request access on the Hugging Face page and respect the 
   year      = {2026},
   isbn      = {979-8-4007-2842-6},
   publisher = {Association for Computing Machinery},
-  address   = {New York, NY, USA},
+  address   = {Kuala Lumpur, Malaysia},
   url       = {https://doi.org/10.1145/3829340.3842299},
   doi       = {10.1145/3829340.3842299},
   booktitle = {SIGGRAPH Asia 2026 Conference Papers},
   series    = {SA Conference Papers '26},
-  location  = {Kuala Lumpur, Malaysia},
   month     = dec
 }
 ```
