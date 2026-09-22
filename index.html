@@ -190,15 +190,18 @@
         <div class="card-idx">01</div>
         <h3>Background Token Dropping</h3>
         <p>
-          Object-centric views are sparse: the surface that needs texture is often
-          8&ndash;25% of the canvas, yet a vanilla DiT still turns empty background into
-          tokens and runs every block on them. The non-obvious fact is that the 1D
-          sequence does not have to stay contiguous. A FLUX probe that injects RoPE into
-          noise and then deletes background tokens still denoises a coherent layout
-          &mdash; the transformer reads absolute coordinates from RoPE, not from token
-          adjacency. So we drop background tokens <em>before</em> the MM-DiT, keep each
-          survivor&rsquo;s original RoPE index (and with it the multi-view geometric prior),
-          and spend the entire budget on surface texels.
+          The sparsity is intrinsic to object-centric multi-view rendering, not a
+          poorly chosen crop. Objects sit in a fixed six-view layout, but their
+          silhouettes are irregular and do not fill the enclosing box: chair legs
+          and character limbs leave large empty regions that cropping cannot
+          remove. A vanilla DiT still tokenizes that background and runs every
+          block on it. The non-obvious fact is that the 1D sequence does not have
+          to stay contiguous. A FLUX probe that injects RoPE into noise and then
+          deletes background tokens still denoises a coherent layout &mdash; the
+          transformer reads absolute coordinates from RoPE, not from token
+          adjacency. So we drop background tokens <em>before</em> the MM-DiT, keep
+          each survivor&rsquo;s original RoPE index (and with it the multi-view
+          geometric prior), and spend the entire budget on surface texels.
         </p>
       </div>
       <div class="card">
