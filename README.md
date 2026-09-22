@@ -42,7 +42,7 @@ Feel free to contact me ([ybzhang23@mails.jlu.edu.cn](mailto:ybzhang23@mails.jlu
 
 ## News
 
-- [2026-09-19] Paper available on [arXiv](https://arxiv.org/abs/2609.23169).
+- [2026-09-22] Paper available on [arXiv](https://arxiv.org/abs/2609.23169).
 - [2026-09-22] Project page, code placeholder, and [G-buffer TexVerse](https://huggingface.co/datasets/YiboZhang2001/G-buffer-TexVerse) dataset card released.
 
 ## Code
