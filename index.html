@@ -57,6 +57,7 @@
       <a class="btn" href="https://arxiv.org/abs/2609.23169">arXiv</a>
       <a class="btn" href="https://github.com/yiboz2001/UltraTex">Code</a>
       <a class="btn" href="https://huggingface.co/datasets/YiboZhang2001/G-buffer-TexVerse">Dataset</a>
+      <a class="btn" href="https://www.youtube.com/watch?v=9tOsRvGxfN4">Video</a>
     </div>
   </div>
 </header>
@@ -89,7 +90,7 @@
         <div class="stat-lbl">inference speedup</div>
       </div>
       <div class="stat">
-        <div class="stat-num">268K</div>
+        <div class="stat-num">352K</div>
         <div class="stat-lbl">assets in G-buffer TexVerse</div>
       </div>
     </div>
@@ -124,7 +125,8 @@
       <p>
         To satisfy the demanding data requirements of 2K-resolution multi-view diffusion
         training, we construct <strong>G-buffer TexVerse</strong>, a large-scale,
-        ultra-high-resolution multi-view rendering dataset covering over 268,000 3D assets.
+        ultra-high-resolution multi-view rendering dataset covering 351,847 BSDF assets
+        (UltraTex training uses a 268,365-asset subset).
         Extensive experiments show that UltraTex generates visually faithful textures with
         rich fine-grained details, while substantially improving efficiency, achieving
         20.6&times;&ndash;91.1&times; training speedup and 22.3&times;&ndash;74.6&times;
@@ -241,8 +243,8 @@
   <div class="container-wide">
     <h2>G-buffer TexVerse</h2>
     <p class="section-lead">
-      A large-scale, ultra-high-resolution multi-view rendering dataset built on TexVerse,
-      covering over 268,000 rigorously filtered 3D assets at up to 4096&times;4096.
+      A large-scale, ultra-high-resolution multi-view rendering dataset built on TexVerse.
+      The public release is 351,847 BSDF assets at up to 4096&times;4096; UltraTex training uses a 268,365-asset subset.
     </p>
 
     <div class="pipeline-steps">
@@ -250,11 +252,11 @@
       <div class="parrow">&rarr;</div>
       <div class="pstep"><div class="pstep-n">402K</div><div class="pstep-l">visual quality (GPT-5)</div></div>
       <div class="parrow">&rarr;</div>
-      <div class="pstep"><div class="pstep-n">348K</div><div class="pstep-l">non-BSDF filtering</div></div>
+      <div class="pstep"><div class="pstep-n">352K</div><div class="pstep-l">non-BSDF filtering (released)</div></div>
       <div class="parrow">&rarr;</div>
       <div class="pstep"><div class="pstep-n">297K</div><div class="pstep-l">albedo entropy</div></div>
       <div class="parrow">&rarr;</div>
-      <div class="pstep final"><div class="pstep-n">268K</div><div class="pstep-l">AI-content removal</div></div>
+      <div class="pstep final"><div class="pstep-n">268K</div><div class="pstep-l">AI-content removal (training)</div></div>
     </div>
 
     <h3 class="sub-h">Camera configurations</h3>

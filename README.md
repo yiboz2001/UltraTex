@@ -5,7 +5,8 @@
 
   <a href="https://yiboz2001.github.io/UltraTex/"><img src="https://img.shields.io/badge/Project%20Page-UltraTex-blue"></a> &nbsp;
   <a href="https://arxiv.org/abs/2609.23169"><img src="https://img.shields.io/badge/arXiv-2609.23169-b31b1b.svg?logo=arXiv"></a> &nbsp;
-  <a href="https://huggingface.co/datasets/YiboZhang2001/G-buffer-TexVerse"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-G--buffer%20TexVerse-blue"></a>
+  <a href="https://huggingface.co/datasets/YiboZhang2001/G-buffer-TexVerse"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-G--buffer%20TexVerse-blue"></a> &nbsp;
+  <a href="https://www.youtube.com/watch?v=9tOsRvGxfN4"><img src="https://img.shields.io/badge/YouTube-Video-red?logo=youtube"></a>
 <br>
 <strong>SIGGRAPH Asia 2026</strong>
 <br>
@@ -51,22 +52,22 @@ Training and inference code will be released here. This repository currently hos
 
 ## G-buffer TexVerse
 
-To train 2K multi-view diffusion we constructed **G-buffer TexVerse**, a large-scale ultra-high-resolution multi-view rendering dataset built on [TexVerse](https://github.com/yiboz2001/TexVerse). After four-stage filtering of the raw 858K TexVerse assets, **over 268K** high-quality 3D assets remain.
+To train 2K multi-view diffusion we constructed **G-buffer TexVerse**, a large-scale ultra-high-resolution multi-view rendering dataset built on [TexVerse](https://github.com/yiboz2001/TexVerse). The public release is the **351,847**-asset BSDF rendering pool. UltraTex training applies two further filters (albedo entropy and AI-content removal) and uses a **268,365**-asset subset.
 
-| Stage | Count |
-|---|---|
-| Raw TexVerse | 858K |
-| Visual quality (GPT-5) | 402K |
-| Non-BSDF filtering | 348K |
-| Albedo entropy | 297K |
-| AI-content removal | **268K** |
+| Stage | Paper | This release |
+|---|---|---|
+| Raw TexVerse | 858K | |
+| Visual quality (GPT-5) | 402K | |
+| Non-BSDF filtering | ~348K | **351,847 BSDF assets** |
+| Albedo entropy | 297K | training only |
+| AI-content removal | **268,365** | training only |
 
-Every asset is rendered with Blender Cycles under two camera configurations that share intrinsics, object normalization, aspect-ratio-adaptive distance, and three sampled HDR lights (from a pool of 862 Poly Haven maps):
+Every asset is rendered with Blender Cycles under two camera configurations that share intrinsics, object normalization, aspect-ratio-adaptive distance, and three sampled HDR lights (from a pool of 862 Poly Haven maps; index → asset in [`env_maps.json`](https://huggingface.co/datasets/YiboZhang2001/G-buffer-TexVerse/blob/main/env_maps.json)):
 
 - **Canonical — 6 views** (used by UltraTex): azimuths 0°/90°/180°/270° at elevation 0°, plus top and bottom. Training reference images are rendered under the same three HDR maps.
 - **Sphere — 36 views** (community release, not used by UltraTex): 12 azimuths × elevations {−40°, −20°, 30°}.
 
-Per-view outputs include shading normals (camera & world), canonical coordinate maps, albedo, metallic/roughness where available, and shaded images, all with an alpha channel. Resolution is 2048² or 4096² according to the asset's native texture resolution (26.39% / 73.61%).
+Per-view outputs include shading normals (camera & world), canonical coordinate maps, albedo, metallic/roughness where available, and shaded images, all with an alpha channel. Resolution is 2048² or 4096² according to the asset's native texture resolution. Source-texture split of the 351,847 assets: 1024 / 2048 / 4096 / 8192 = 102,254 / 147,261 / 79,198 / 23,134.
 
 **Download:** [https://huggingface.co/datasets/YiboZhang2001/G-buffer-TexVerse](https://huggingface.co/datasets/YiboZhang2001/G-buffer-TexVerse)
 
