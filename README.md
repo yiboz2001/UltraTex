@@ -54,13 +54,15 @@ Training and inference code will be released here. This repository currently hos
 
 To train 2K multi-view diffusion we constructed **G-buffer TexVerse**, a large-scale ultra-high-resolution multi-view rendering dataset built on [TexVerse](https://github.com/yiboz2001/TexVerse). The public release is the **351,847**-asset BSDF rendering pool. UltraTex training applies two further filters (albedo entropy and AI-content removal) and uses a **268,365**-asset subset.
 
-| Stage | Paper | This release |
-|---|---|---|
-| Raw TexVerse | 858K | |
-| Visual quality (GPT-5) | 402K | |
-| Non-BSDF filtering | ~348K | **351,847 BSDF assets** |
-| Albedo entropy | 297K | training only |
-| AI-content removal | **268,365** | training only |
+| Stage | Remaining |
+|---|---|
+| Raw TexVerse | 858K |
+| Visual quality (GPT-5) | 402K |
+| Non-BSDF filtering | 348K |
+| Albedo entropy | 297K |
+| AI-content removal | 268,365 |
+
+The public release is larger than the training subset: **351,847 BSDF assets**. UltraTex training uses the 268,365-asset subset.
 
 Every asset is rendered with Blender Cycles under two camera configurations that share intrinsics, object normalization, aspect-ratio-adaptive distance, and three sampled HDR lights (from a pool of 862 Poly Haven maps; index → asset in [`env_maps.json`](https://huggingface.co/datasets/YiboZhang2001/G-buffer-TexVerse/blob/main/env_maps.json)):
 
