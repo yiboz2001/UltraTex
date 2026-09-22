@@ -115,12 +115,18 @@ sup { font-size: 0.7em; font-weight: 400; }
 }
 .btn {
   display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px;
   background: var(--fg); color: #fff;
   border: 1px solid var(--fg); border-radius: 999px;
   min-width: 116px;
-  padding: 10px 26px;
+  padding: 10px 22px;
   font-size: 0.98rem; font-weight: 500;
   transition: background 0.15s, color 0.15s;
+}
+.btn svg {
+  width: 18px; height: 18px;
+  fill: currentColor;
+  flex: 0 0 auto;
 }
 .btn:hover { background: #fff; color: var(--fg); border-color: var(--fg); }
 
@@ -212,7 +218,7 @@ sup { font-size: 0.7em; font-weight: 400; }
   margin: 0 0 10px;
   font-size: 1.06rem; font-weight: 650; letter-spacing: -0.01em;
 }
-.card p { margin: 0; font-size: 0.94rem; line-height: 1.6; color: var(--fg-mid); }
+.card p { margin: 0; font-size: 0.92rem; line-height: 1.62; color: var(--fg-mid); text-wrap: pretty; }
 
 /* Two-up variant: keep both cards on one row until they get genuinely narrow.
    min() keeps the 380px floor from overflowing viewports narrower than that. */

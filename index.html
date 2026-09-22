@@ -54,10 +54,22 @@
     <div class="note"><sup class="dag">&dagger;</sup>Corresponding author</div>
 
     <div class="buttons">
-      <a class="btn" href="https://arxiv.org/abs/2609.23169">arXiv</a>
-      <a class="btn" href="https://github.com/yiboz2001/UltraTex">Code</a>
-      <a class="btn" href="https://huggingface.co/datasets/YiboZhang2001/G-buffer-TexVerse">Dataset</a>
-      <a class="btn" href="https://www.youtube.com/watch?v=9tOsRvGxfN4">Video</a>
+      <a class="btn" href="https://arxiv.org/abs/2609.23169">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm0 1.5L19.5 9H14zM8.2 12.15h.9l1.55 2.55c.14.23.25.45.25.45h.03s.09-.24.22-.47l1.5-2.53h.96l-2.25 3.52 2.37 3.68h-.94l-1.68-2.75c-.1-.17-.19-.36-.19-.36h-.03s-.08.18-.18.35l-1.63 2.76h-.93l2.33-3.61z"/></svg>
+        arXiv
+      </a>
+      <a class="btn" href="https://github.com/yiboz2001/UltraTex">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        Code
+      </a>
+      <a class="btn" href="https://huggingface.co/datasets/YiboZhang2001/G-buffer-TexVerse">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-3.3 13.15c-.85 0-1.55-.7-1.55-1.55S7.85 12.05 8.7 12.05s1.55.7 1.55 1.55-.7 1.55-1.55 1.55zm2.05-4.4c-.38.22-.86.1-1.08-.28-.22-.38-.1-.86.28-1.08 1.18-.68 2.62-.68 3.8 0 .38.22.5.7.28 1.08-.22.38-.7.5-1.08.28-.7-.4-1.5-.4-2.2 0zm5.85 4.4c-.85 0-1.55-.7-1.55-1.55s.7-1.55 1.55-1.55 1.55.7 1.55 1.55-.7 1.55-1.55 1.55z"/></svg>
+        Dataset
+      </a>
+      <a class="btn" href="https://www.youtube.com/watch?v=9tOsRvGxfN4">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Video
+      </a>
     </div>
   </div>
 </header>
@@ -157,17 +169,19 @@
   <div class="container-wide">
     <h2>Method</h2>
     <p class="section-lead">
-      UltraTex scales in-context multi-view diffusion to 2048 resolution through three
-      complementary foreground-aware designs.
+      2048 six-view in-context diffusion is a 212,992-token sequence. The bottleneck
+      is not &ldquo;attention is expensive&rdquo; in the abstract &mdash; it is two
+      object-centric redundancies, plus a decoding trap that appears only if you keep
+      the speedup at test time.
     </p>
 
     <figure class="figure matted">
       <img src="assets/pipeline.png" alt="Overview of the UltraTex framework" loading="lazy">
       <figcaption>
-        <strong>Overview of the UltraTex framework.</strong> Geometric masks derived from the
-        rendered alpha channels drop background tokens before the DiT backbone, block-sparse
-        attention then operates only on the retained foreground sequence, and foreground-aware
-        VAE decoding reconstructs the final 2K views without background artifacts.
+        <strong>Overview of the UltraTex framework.</strong> Sequence-level: drop background
+        tokens before the DiT. Attention-level: sparse top-<em>k</em> blocks on what remains.
+        Decoding-level: replace the never-denoised background so the VAE does not poison the
+        foreground.
       </figcaption>
     </figure>
 
@@ -176,31 +190,43 @@
         <div class="card-idx">01</div>
         <h3>Background Token Dropping</h3>
         <p>
-          Object-centric renderings are mostly empty canvas. We extract binary foreground
-          masks from the rendered alpha channels, downsample them to the latent token grid,
-          and discard background tokens <em>before</em> the DiT backbone. Retained tokens keep
-          their original RoPE position indices, so absolute spatial coordinates and the
-          multi-view geometric prior survive the removal.
+          Object-centric views are sparse: the surface that needs texture is often
+          8&ndash;25% of the canvas, yet a vanilla DiT still turns empty background into
+          tokens and runs every block on them. The non-obvious fact is that the 1D
+          sequence does not have to stay contiguous. A FLUX probe that injects RoPE into
+          noise and then deletes background tokens still denoises a coherent layout
+          &mdash; the transformer reads absolute coordinates from RoPE, not from token
+          adjacency. So we drop background tokens <em>before</em> the MM-DiT, keep each
+          survivor&rsquo;s original RoPE index (and with it the multi-view geometric prior),
+          and spend the entire budget on surface texels.
         </p>
       </div>
       <div class="card">
         <div class="card-idx">02</div>
         <h3>Block-Sparse Attention</h3>
         <p>
-          Even within the foreground, token interactions are sparse. We apply block-sparse
-          attention with a top-<em>k</em> selection mechanism over the compressed sequence,
-          bypassing dense layer-wise modeling while keeping the interactions that matter for
-          multi-view consistency.
+          Shortening the sequence does not finish the job. At 2048, dense attention
+          among the remaining foreground tokens is still a large fraction of step time.
+          Attention maps of a BTD-trained full-attention model are already sparse in
+          both double-stream and single-stream blocks: most foreground&ndash;foreground
+          interactions are irrelevant to local texture synthesis. Block-sparse
+          attention with top-<em>k</em> selection on mean-pooled blocks therefore
+          approximates the interactions that actually fire, instead of paying
+          <em>O</em>(N<sup>2</sup>) on a sequence that BTD already compressed.
         </p>
       </div>
       <div class="card">
         <div class="card-idx">03</div>
         <h3>Foreground-Aware VAE Decoding</h3>
         <p>
-          Foreground-only denoising leaves the background at its initial Gaussian noise.
-          Decoding such a composite latent corrupts the foreground. We substitute a canonical
+          Test-time speedup uses the same foreground-only Euler update, so background
+          latents stay at the initial Gaussian. A stock VAE decoder, fed a clean
+          foreground glued to pure noise, leaks that noise across the object and
+          destroys the 2K detail BTD just paid for. The fix is not to denoise the
+          background (that would throw the speedup away). We swap in a canonical
           in-distribution background latent and lightly fine-tune the decoder with a
-          foreground-restricted objective for artifact-free reconstruction.
+          foreground-restricted objective so it can read the composite without
+          corrupting the surface.
         </p>
       </div>
     </div>
