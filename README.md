@@ -29,7 +29,7 @@ Rui Ma<sup>1 &dagger;</sup>
 <sup>&dagger;</sup> Corresponding author
 </div>
 
-![UltraTex](assets/teaser.jpg)
+![UltraTex](https://yiboz2001.github.io/UltraTex/assets/teaser.jpg)
 
 **UltraTex** is an efficient end-to-end framework for high-resolution multi-view diffusion-based 3D texturing at **2048×2048**. Object-centric multi-view renderings contain two major sources of redundancy: background-induced sequence redundancy and sparse token interactions within the foreground. UltraTex addresses them with:
 
