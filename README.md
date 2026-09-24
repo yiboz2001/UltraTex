@@ -81,14 +81,13 @@ Per-view outputs include shading normals (camera & world), canonical coordinate 
                Cao, Yan-Pei and Guo, Yuan-Chen and Ma, Rui},
   title     = {UltraTex: Unleashing 2K Multi-View Diffusion for 3D Texturing},
   year      = {2026},
-  isbn      = {979-8-4007-2842-6},
+  isbn      = {9798400728426},
   publisher = {Association for Computing Machinery},
   address   = {Kuala Lumpur, Malaysia},
   url       = {https://doi.org/10.1145/3829340.3842299},
   doi       = {10.1145/3829340.3842299},
-  booktitle = {SIGGRAPH Asia 2026 Conference Papers},
+  booktitle = {Proceedings of the SIGGRAPH Asia 2026 Conference Papers},
   series    = {SA Conference Papers '26},
-  month     = dec
 }
 ```
 
