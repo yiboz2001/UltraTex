@@ -1,0 +1,76 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ultratex"
+version = "1.0.0"
+authors = [
+  { name = "Yibo Zhang", email = "ybzhang23@mails.jlu.edu.cn" },
+]
+description = "UltraTex: Unleashing 2K Multi-View Diffusion for 3D Texturing (SIGGRAPH Asia 2026)"
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+license = "MIT"
+license-files = ["LICENSE"]
+
+dependencies = [
+    "torch==2.5.1",
+    "torchvision==0.20.1",
+    "triton==3.1.0",
+    "accelerate==1.11.0",
+    "deepspeed==0.9.5",
+    "diffusers==0.30.1",
+    "einops==0.8.0",
+    "peft==0.19.1",
+    "safetensors==0.7.0",
+    "transformers==5.2.0",
+    "huggingface-hub==1.4.1",
+    "sentencepiece==0.2.0",
+    "protobuf==6.33.1",
+    "tensorboard==2.20.0",
+    "numpy==1.26.4",
+    "Pillow==11.3.0",
+    "opencv-python-headless==4.11.0.86",
+    "scikit-image==0.25.2",
+    "tqdm==4.67.3",
+    "PyYAML==6.0.3",
+]
+
+[project.optional-dependencies]
+vae = [
+    "lpips==0.1.4",
+]
+quanto = [
+    "optimum[quanto]",
+]
+dev = [
+    "ruff",
+]
+
+[project.urls]
+Repository = "https://github.com/yiboz2001/UltraTex"
+ProjectPage = "https://yiboz2001.github.io/UltraTex/"
+Dataset = "https://huggingface.co/datasets/YiboZhang2001/G-buffer-TexVerse"
+Arxiv = "https://arxiv.org/abs/2609.23169"
+
+[tool.setuptools.packages.find]
+where = [""]
+include = ["ultratex*"]
+namespaces = false
+
+[tool.ruff]
+include = ["ultratex/**/*.py", "train_*.py", "inference_*.py"]
+exclude = ["ultratex/sparse_attention/**"]
+line-length = 120
+indent-width = 4
+target-version = "py310"
+show-fixes = true
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]

@@ -1,0 +1,83 @@
+# Data format
+
+A runnable example ships with the repository:
+
+```
+data/demo.json                                   # one-entry JSON
+data/texverse/v2/00/0000304b89ca43ea9d63a7c32f0398bc_2048/   # the asset it points at
+```
+
+That asset is a PBR object from
+[G-buffer TexVerse](https://huggingface.co/datasets/YiboZhang2001/G-buffer-TexVerse)
+(canonical 6-view split, 2048 source texture) and includes `roughness_metallic/`.
+It is enough to smoke-test training and inference before downloading a full
+bucket:
+
+```bash
+CHECKPOINT=checkpoints/flux1-lora bash scripts/inference_flux1.sh
+```
+
+
+Training and inference read a JSON list of objects, each pointing at one
+rendered asset directory. `data/demo.json` is a one-entry example backed by the bundled asset above.
+
+```json
+[
+  {
+    "prompt": "",
+    "image_dir": "data/demo/<id>_<source_texture_res>",
+    "id": "<sha>_<source_texture_res>",
+    "id_only": "<sha>"
+  }
+]
+```
+
+| Field | Description |
+|---|---|
+| `prompt` | Text prompt. Empty string for image-guided texturing. |
+| `image_dir` | Directory holding the multi-view renderings of this asset. |
+| `id` | `<sha>_<source_texture_res>`, matches the directory name. |
+| `id_only` | Asset SHA without the resolution suffix. |
+
+## Expected layout of `image_dir`
+
+Each asset directory follows the
+[G-buffer TexVerse](https://huggingface.co/datasets/YiboZhang2001/G-buffer-TexVerse)
+canonical (6-view) layout:
+
+```
+<id>_<res>/
+├── albedo/000.webp … 005.webp             # target texture
+├── bump_normal_camera/000.webp … 005.webp  # geometric condition
+├── bump_normal_world/000.webp … 005.webp
+├── position/000.webp … 005.webp
+├── roughness_metallic/000.webp … 005.webp  # PBR assets only
+├── render_0/  render_1/  render_2/         # shaded views, 3 HDR lightings
+├── pose/000.npy … 005.npy
+├── render_ref_0/000.webp … 003.webp, env_id.txt   # reference images
+├── render_ref_1/  render_ref_2/
+├── render_ref_{0,1,2}_poses/000.npy … 003.npy
+├── env_indices.txt                         # 3 HDR ids, e.g. [686, 303, 134]
+└── intrinsics.npy
+```
+
+`env_indices.txt` indexes the 862-entry Poly Haven pool; the id → asset mapping
+is `env_maps.json` in the dataset repository.
+
+## Preparing your own data
+
+1. Download one or more buckets from
+   [G-buffer TexVerse](https://huggingface.co/datasets/YiboZhang2001/G-buffer-TexVerse):
+   ```bash
+   python -c "
+   from huggingface_hub import hf_hub_download
+   hf_hub_download('YiboZhang2001/G-buffer-TexVerse',
+                   'canonical/bsdf/00.zip', repo_type='dataset')"
+   ```
+2. Unpack the bucket, then the per-asset zips inside it.
+3. Write a JSON list following the schema above, pointing `image_dir` at each
+   unpacked asset directory.
+
+`bucket_metadata_json` (default `data/average_percentages.json`) holds the
+per-asset foreground ratio used by the length-aware batch sampler. It maps
+`id_only` to a float in `[0, 1]`. If absent, all assets default to ratio 1.0.

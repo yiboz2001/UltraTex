@@ -43,35 +43,201 @@ Feel free to contact me ([ybzhang23@mails.jlu.edu.cn](mailto:ybzhang23@mails.jlu
 
 ## News
 
+- [2026-10-03] Training and inference code and [weights](https://www.modelscope.ai/models/Yibo-Zhang/UltraTex) released.
 - [2026-09-22] Paper available on [arXiv](https://arxiv.org/abs/2609.23169).
 - [2026-09-22] [Project page](https://yiboz2001.github.io/UltraTex/) and [G-buffer TexVerse](https://huggingface.co/datasets/YiboZhang2001/G-buffer-TexVerse) released.
 
-## Code
+## Installation
 
-Training and inference code will be released here.
+Tested with Python 3.12, CUDA 12.4 and PyTorch 2.5.1.
+
+```bash
+git clone https://github.com/yiboz2001/UltraTex.git
+cd UltraTex
+conda create -n ultratex python=3.12 -y
+conda activate ultratex
+pip install -r requirements.txt
+```
+
+`requirements.txt` pins the exact versions we tested. The sparse-attention
+kernels are Triton (`triton==3.1.0`) and are compiled on first use.
+
+Download the UltraTex weights into `checkpoints/` (layout below):
+
+```bash
+pip install modelscope
+modelscope download --model Yibo-Zhang/UltraTex --local_dir checkpoints
+```
+
+## Repository structure
+
+```
+UltraTex/
+├── ultratex/
+│   ├── backbones/
+│   │   ├── flux1/              # FLUX.1-dev backbone (BTD + BSA in math.py)
+│   │   └── flux2/              # FLUX.2-Klein backbone (4B / 9B)
+│   ├── sparse_attention/       # Vendored SLA, sparse branch only, Triton 3.x / H100 fixes
+│   ├── data/                   # Dataset loaders
+├── train_flux1.py              # Training on FLUX.1-dev
+├── train_flux2.py              # Training on FLUX.2-Klein (albedo)
+├── train_flux2_mr.py           # Training on FLUX.2-Klein (metallic-roughness)
+├── inference_flux1.py          # Inference on FLUX.1-dev
+├── inference_flux1_ai.py       # Inference on AI-generated meshes (FLUX.1)
+├── inference_flux2.py          # Inference on FLUX.2-Klein
+├── train_vae/                  # Foreground-Aware VAE Decoder training
+│   ├── train_decoder.py        # Decoder fine-tuning, FLUX.1 AE (FG-restricted L2)
+│   ├── train_decoder_flux2.py  # Decoder fine-tuning, FLUX.2 AE
+│   ├── infer_decoder.py        # Decoder eval (FLUX.1)
+│   ├── infer_decoder_flux2.py  # Decoder eval (FLUX.2)
+│   └── eval_metrics.py         # DeltaE / LPIPS / PSNR
+├── scripts/                    # Shell launch scripts
+└── requirements.txt
+```
+
+## Weights
+
+UltraTex ships weights for two backbones. Each needs its own LoRA **and** its
+own Foreground-Aware VAE decoder — the decoders are not interchangeable, since
+the two backbones use different autoencoders.
+
+Download the UltraTex weights from [ModelScope](https://www.modelscope.ai/models/Yibo-Zhang/UltraTex) and place them under `checkpoints/`:
+
+```
+checkpoints/
+├── flux1/
+│   ├── lora/                 # UltraTex LoRA for FLUX.1-dev
+│   └── decoder.pt            # FG-aware VAE decoder for FLUX.1
+├── flux2/
+│   ├── lora/                 # UltraTex LoRA for FLUX.2-Klein 9B (albedo)
+│   └── decoder.pt            # FG-aware VAE decoder for FLUX.2
+├── flux2_mr/
+│   └── lora/                 # UltraTex LoRA for FLUX.2-Klein 9B (metallic-roughness)
+└── base/                     # base models, downloaded separately
+    ├── FLUX.1-dev/
+    │   ├── flux1-dev.safetensors
+    │   └── ae.safetensors
+    ├── xflux_text_encoders/  # T5 for FLUX.1 (XLabs-AI/xflux_text_encoders)
+    ├── clip-vit-large-patch14/  # CLIP for FLUX.1 (openai/clip-vit-large-patch14)
+    └── flux2/
+        ├── flux-2-klein-base-9b.safetensors
+        ├── ae.safetensors
+        └── qwen3-8b/
+```
+
+Base models come from their original sources:
+[FLUX.1-dev](https://huggingface.co/black-forest-labs/FLUX.1-dev),
+[FLUX.2](https://huggingface.co/black-forest-labs/FLUX.2-dev),
+[Qwen3-8B](https://huggingface.co/Qwen/Qwen3-8B), and the
+[XLabs T5](https://huggingface.co/XLabs-AI/xflux_text_encoders) /
+[CLIP](https://huggingface.co/openai/clip-vit-large-patch14) encoders for FLUX.1.
+
+A LoRA only loads into the backbone it was trained on: the 9B LoRA will not fit
+the 4B model (hidden size 4096 vs 3072).
+
+## Training
+
+FLUX.1-dev backbone:
+
+```bash
+bash scripts/train_flux1_2048.sh
+```
+
+FLUX.2-Klein 9B backbone (albedo, or the metallic-roughness branch with `TASK=mr`):
+
+```bash
+bash scripts/train_flux2_9b_2048.sh
+TASK=mr bash scripts/train_flux2_9b_2048.sh
+```
+
+Both default to the bundled demo objects (`data/train_demo.json`). Training
+continues from the released LoRA when it is present under `checkpoints/`,
+otherwise the LoRA is trained from scratch.
+
+Key environment variables (all overridable, see scripts for defaults):
+
+| Variable | Description |
+|---|---|
+| `TRAIN_JSON` | Path to training data JSON |
+| `EVAL_JSON` | Path to evaluation data JSON |
+| `CHECKPOINT` | UltraTex LoRA directory |
+| `DECODER_CKPT` | Foreground-aware VAE decoder checkpoint |
+| `LR` | Learning rate |
+| `RESOLUTION` | Training resolution (default 2048) |
+
+Base model locations are read from the environment so nothing is fetched from
+the Hub at run time. The launch scripts set these to the `checkpoints/base/`
+layout above; override them if your weights live elsewhere.
+
+| Variable | Backbone | Points at |
+|---|---|---|
+| `FLUX_DEV_MODEL_PATH` | FLUX.1 | `flux1-dev.safetensors` |
+| `AE_MODEL_PATH` | both | autoencoder `ae.safetensors` |
+| `T5` | FLUX.1 | XLabs T5 encoder directory |
+| `CLIP` | FLUX.1 | CLIP encoder directory |
+| `KLEIN_9B_BASE_MODEL_PATH` | FLUX.2 | `flux-2-klein-base-9b.safetensors` |
+| `QWEN3_8B_PATH` | FLUX.2 | Qwen3-8B directory |
+
+## Inference
+
+```bash
+# FLUX.1
+bash scripts/inference_flux1.sh
+
+# FLUX.2
+bash scripts/inference_flux2.sh
+```
+
+UltraTex predicts albedo by default. Pass `--task mr` to predict the
+metallic-roughness map instead; that path uses `train_flux2_mr.py` and reads
+`roughness_metallic/` as the target:
+
+```bash
+bash scripts/inference_flux2.sh standard --task mr   # uses checkpoints/flux2_mr/lora
+```
+
+The metallic-roughness branch shares the FLUX.2 VAE decoder (`checkpoints/flux2/decoder.pt`).
+
+The backbone must match the checkpoint: a LoRA trained on
+`flux.2-klein-base-9b` will not load into the 4B model (hidden size 4096 vs
+3072).
+
+## Foreground-Aware VAE Decoder
+
+Each backbone has its own decoder, trained separately so that foreground-only
+latents decode without background leakage. The AE encoder stays frozen and only
+the decoder is trained, with an L2 loss on foreground pixels.
+
+Training (defaults to the bundled demo objects; set `TRAIN_JSON` / `EVAL_JSON`
+for your own data):
+
+```bash
+bash scripts/train_vae_flux1.sh     # FLUX.1 AE -> outputs/train_vae_flux1/decoder_step*.pt
+bash scripts/train_vae_flux2.sh     # FLUX.2 AE -> outputs/train_vae_flux2/decoder_step*.pt
+```
+
+Both read `AE_MODEL_PATH` (defaults to the `checkpoints/base/` layout above) and
+accept `LR`, `MAX_TRAIN_STEPS`, `RESOLUTION`, `SAVE_EVERY`, `OUTPUT_DIR`,
+`NUM_GPUS` and `MAIN_PROCESS_PORT`.
+
+Evaluation, run from the repository root:
+
+```bash
+export PYTHONPATH=$PWD
+accelerate launch train_vae/infer_decoder.py --decoder_ckpt checkpoints/flux1/decoder.pt
+python train_vae/infer_decoder_flux2.py --decoder_ckpt checkpoints/flux2/decoder.pt
+```
 
 ## G-buffer TexVerse
 
-To train 2K multi-view diffusion we constructed **G-buffer TexVerse**, a large-scale ultra-high-resolution multi-view rendering dataset built on [TexVerse](https://github.com/yiboz2001/TexVerse). The public release is the **351,847**-asset BSDF rendering pool. UltraTex training applies two further filters (albedo entropy and AI-content removal) and uses a **268,365**-asset subset.
+The training dataset is available at [G-buffer TexVerse](https://huggingface.co/datasets/YiboZhang2001/G-buffer-TexVerse) — 351,847 BSDF assets with multi-view G-buffer renderings at up to 4096×4096. See the dataset card for layout and download instructions.
 
-| Stage | Remaining |
-|---|---|
-| Raw TexVerse | 858K |
-| Visual quality (GPT-5) | 402K |
-| Non-BSDF filtering | 348K |
-| Albedo entropy | 297K |
-| AI-content removal | 268,365 |
+## Acknowledgements
 
-The public release is larger than the training subset: **351,847 BSDF assets**. UltraTex training uses the 268,365-asset subset.
-
-Every asset is rendered with Blender Cycles under two camera configurations that share intrinsics, object normalization, aspect-ratio-adaptive distance, and three sampled HDR lights (from a pool of 862 Poly Haven maps; index → asset in [`env_maps.json`](https://huggingface.co/datasets/YiboZhang2001/G-buffer-TexVerse/blob/main/env_maps.json)):
-
-- **Canonical — 6 views** (used by UltraTex): azimuths 0°/90°/180°/270° at elevation 0°, plus top and bottom. Training reference images are rendered under the same three HDR maps.
-- **Sphere — 36 views** (community release, not used by UltraTex): 12 azimuths × elevations {−40°, −20°, 30°}.
-
-Per-view outputs include shading normals (camera & world), canonical coordinate maps, albedo, metallic/roughness where available, and shaded images, all with an alpha channel. Resolution is 2048² or 4096² according to the asset's native texture resolution. Source-texture split of the 351,847 assets: 1024 / 2048 / 4096 / 8192 = 102,254 / 147,261 / 79,198 / 23,134.
-
-**Download:** [https://huggingface.co/datasets/YiboZhang2001/G-buffer-TexVerse](https://huggingface.co/datasets/YiboZhang2001/G-buffer-TexVerse)
+- [FLUX](https://github.com/black-forest-labs/flux) by Black Forest Labs
+- [UNO](https://github.com/bytedance/UNO) by ByteDance
+- [SLA (Sparse Linear Attention)](https://github.com/thu-ml/SLA) by Jintao Zhang, Haoxu Wang et al. — vendored under `ultratex/sparse_attention/` (Apache-2.0). We use its sparse block-attention kernels only (the linear-attention branch is removed) and patch them for Triton 3.x / H100; see `ultratex/sparse_attention/PATCHES.md`
+- [Poly Haven](https://polyhaven.com/) for CC0 HDR environment maps
 
 ## Citation
 
@@ -93,4 +259,4 @@ Per-view outputs include shading normals (camera & world), canonical coordinate 
 
 ## License
 
-This repo is released under the [MIT License](./LICENSE).
+This code is released under the [MIT License](./LICENSE).
