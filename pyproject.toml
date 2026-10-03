@@ -43,9 +43,6 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-vae = [
-    "lpips==0.1.4",
-]
 quanto = [
     "optimum[quanto]",
 ]

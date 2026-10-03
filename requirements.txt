@@ -26,9 +26,6 @@ scikit-image==0.25.2
 tqdm==4.67.3
 PyYAML==6.0.3
 
-# Foreground-aware VAE decoder evaluation (train_vae/eval_metrics.py)
-lpips==0.1.4
-
 # Optional: download weights from ModelScope
 # modelscope==1.34.0
 

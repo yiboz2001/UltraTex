@@ -89,8 +89,7 @@ UltraTex/
 │   ├── train_decoder.py        # Decoder fine-tuning, FLUX.1 AE (FG-restricted L2)
 │   ├── train_decoder_flux2.py  # Decoder fine-tuning, FLUX.2 AE
 │   ├── infer_decoder.py        # Decoder eval (FLUX.1)
-│   ├── infer_decoder_flux2.py  # Decoder eval (FLUX.2)
-│   └── eval_metrics.py         # DeltaE / LPIPS / PSNR
+│   └── infer_decoder_flux2.py  # Decoder eval (FLUX.2)
 ├── scripts/                    # Shell launch scripts
 └── requirements.txt
 ```
