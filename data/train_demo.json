@@ -1,25 +1,25 @@
 [
   {
     "prompt": "",
-    "image_dir": "data/texverse/v2/00/0000304b89ca43ea9d63a7c32f0398bc_2048",
+    "image_dir": "data/0000304b89ca43ea9d63a7c32f0398bc_2048",
     "id": "0000304b89ca43ea9d63a7c32f0398bc_2048",
     "id_only": "0000304b89ca43ea9d63a7c32f0398bc"
   },
   {
     "prompt": "",
-    "image_dir": "data/texverse/v2/00/0000c32fde7f45efb8d14e8ba737d50c_2048",
+    "image_dir": "data/0000c32fde7f45efb8d14e8ba737d50c_2048",
     "id": "0000c32fde7f45efb8d14e8ba737d50c_2048",
     "id_only": "0000c32fde7f45efb8d14e8ba737d50c"
   },
   {
     "prompt": "",
-    "image_dir": "data/texverse/v2/00/0002814bce84496d940b01503879a28d_2048",
+    "image_dir": "data/0002814bce84496d940b01503879a28d_2048",
     "id": "0002814bce84496d940b01503879a28d_2048",
     "id_only": "0002814bce84496d940b01503879a28d"
   },
   {
     "prompt": "",
-    "image_dir": "data/texverse/v2/00/00049a1ac6fd4735bb52d3aeb85c0207_2048",
+    "image_dir": "data/00049a1ac6fd4735bb52d3aeb85c0207_2048",
     "id": "00049a1ac6fd4735bb52d3aeb85c0207_2048",
     "id_only": "00049a1ac6fd4735bb52d3aeb85c0207"
   }

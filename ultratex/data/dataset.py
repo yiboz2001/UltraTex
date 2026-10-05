@@ -187,7 +187,7 @@ class FluxPairedDatasetV2(Dataset):
         image_dropout=-1,
         text_dropout=-1,
         kernel_pad=2,
-        data_root_v2="data/texverse/v2",
+        data_root=None,
         bucket_metadata_json: str | None = None,
         degrade_single_render_enabled: bool = False,
         degrade_single_render_resolution: int = 512,
@@ -209,9 +209,9 @@ class FluxPairedDatasetV2(Dataset):
         with open(self.json_file, "rt") as f:
             self.data_dicts = json.load(f)
 
-        # The JSON files retain paths from the original TexVerse storage. Resolve
-        # IDs exclusively against v2; entries that only exist in another dataset
-        # version must not participate in this training run.
+        # Each entry's `image_dir` is used as given (relative to the working
+        # directory). If `data_root` is set, objects are looked up as
+        # <data_root>/<id> instead, e.g. for an extracted G-buffer TexVerse bucket.
         resolved_data_dicts = []
         skipped_not_in_v2 = []
         for data_dict in self.data_dicts:
@@ -222,8 +222,11 @@ class FluxPairedDatasetV2(Dataset):
                 skipped_not_in_v2.append(sample_id)
                 continue
 
-            v2_dir = os.path.join(data_root_v2, sample_id[:2], sample_id)
-            data_dict["_resolved_image_dir"] = v2_dir
+            if data_root is not None:
+                image_dir = os.path.join(data_root, sample_id)
+            else:
+                image_dir = data_dict["image_dir"]
+            data_dict["_resolved_image_dir"] = image_dir
             resolved_data_dicts.append(data_dict)
 
         self.data_dicts = resolved_data_dicts

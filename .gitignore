@@ -15,22 +15,7 @@ wandb/
 *.ckpt
 events.out.tfevents.*
 
-# Data: keep the bundled demo, ignore downloaded buckets
-data/*
-!data/README.md
-!data/demo.json
-!data/train_demo.json
-!data/eval_demo.json
-!data/texverse/
-data/texverse/*
-!data/texverse/v2/
-data/texverse/v2/*
-!data/texverse/v2/00/
-data/texverse/v2/00/*
-!data/texverse/v2/00/0000304b89ca43ea9d63a7c32f0398bc_2048/
-!data/texverse/v2/00/0000c32fde7f45efb8d14e8ba737d50c_2048/
-!data/texverse/v2/00/00049a1ac6fd4735bb52d3aeb85c0207_2048/
-!data/texverse/v2/00/0002814bce84496d940b01503879a28d_2048/
+# Data: bundled demo objects live directly under data/<id>/
 
 # OS
 .DS_Store

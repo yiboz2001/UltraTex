@@ -1,36 +1,34 @@
 # Data format
 
-A runnable example ships with the repository:
+Four demo objects ship with the repository, so every script runs without
+downloading data:
 
 ```
-data/demo.json                                   # one-entry JSON
-data/texverse/v2/00/0000304b89ca43ea9d63a7c32f0398bc_2048/   # the asset it points at
+data/train_demo.json          # all four objects (training default)
+data/eval_demo.json           # first object (evaluation / inference default)
+data/demo.json                # same as eval_demo.json
+data/<id>_<res>/              # one directory per object
 ```
 
-That asset is a PBR object from
+They are canonical 6-view assets from
 [G-buffer TexVerse](https://huggingface.co/datasets/YiboZhang2001/G-buffer-TexVerse)
-(canonical 6-view split, 2048 source texture) and includes `roughness_metallic/`.
-It is enough to smoke-test training and inference before downloading a full
-bucket:
+and include `roughness_metallic/`.
 
-```bash
-CHECKPOINT=checkpoints/flux1-lora bash scripts/inference_flux1.sh
-```
-
-
-Training and inference read a JSON list of objects, each pointing at one
-rendered asset directory. `data/demo.json` is a one-entry example backed by the bundled asset above.
+Training and inference read a JSON list of objects. Each entry's `image_dir`
+points at one asset directory, relative to the repository root:
 
 ```json
 [
   {
     "prompt": "",
-    "image_dir": "data/demo/<id>_<source_texture_res>",
-    "id": "<sha>_<source_texture_res>",
-    "id_only": "<sha>"
+    "image_dir": "data/<id>_<res>",
+    "id": "<id>_<res>",
+    "id_only": "<id>"
   }
 ]
 ```
+
+To use your own data, extract assets anywhere and write a JSON in this format.
 
 | Field | Description |
 |---|---|
