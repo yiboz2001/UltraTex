@@ -83,7 +83,6 @@ UltraTex/
 ├── train_flux2.py              # Training on FLUX.2-Klein (albedo)
 ├── train_flux2_mr.py           # Training on FLUX.2-Klein (metallic-roughness)
 ├── inference_flux1.py          # Inference on FLUX.1-dev
-├── inference_flux1_ai.py       # Inference on AI-generated meshes (FLUX.1)
 ├── inference_flux2.py          # Inference on FLUX.2-Klein
 ├── train_vae/                  # Foreground-Aware VAE Decoder training
 │   ├── train_decoder.py        # Decoder fine-tuning, FLUX.1 AE (FG-restricted L2)
@@ -192,7 +191,7 @@ metallic-roughness map instead; that path uses `train_flux2_mr.py` and reads
 `roughness_metallic/` as the target:
 
 ```bash
-bash scripts/inference_flux2.sh standard --task mr   # uses checkpoints/flux2_mr/lora
+bash scripts/inference_flux2.sh --task mr   # uses checkpoints/flux2_mr/lora
 ```
 
 The metallic-roughness branch shares the FLUX.2 VAE decoder (`checkpoints/flux2/decoder.pt`).

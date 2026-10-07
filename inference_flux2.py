@@ -34,7 +34,6 @@ from tqdm import tqdm
 
 from ultratex.backbones.flux2.model import configure_sparse_attention
 from ultratex.data.dataset import FluxPairedDatasetV2
-from ultratex.data.dataset_ai import FluxPairedDatasetAI
 from ultratex.data.dataset_mr import FluxPairedDatasetMR
 
 
@@ -127,7 +126,6 @@ class InferenceArgs:
     resolution_ref: int | None = None
     eval_data_json: str = "data/eval.json"
     task: Literal["albedo", "mr"] = "albedo"
-    dataset_type: Literal["standard", "ai"] = "standard"
     eval_batch_size: int = 1
     num_workers: int = 4
     max_samples: int | None = None
@@ -184,13 +182,6 @@ def get_trainer(task: str):
 
 
 def build_dataset(args: InferenceArgs):
-    if args.dataset_type == "ai":
-        return FluxPairedDatasetAI(
-            json_file=args.eval_data_json,
-            resolution=args.resolution,
-            resolution_ref=args.resolution_ref,
-            target_subdir="albedo" if args.task == "albedo" else "roughness_metallic",
-        )
     dataset_class = FluxPairedDatasetV2 if args.task == "albedo" else FluxPairedDatasetMR
     return dataset_class(
         json_file=args.eval_data_json,
@@ -298,7 +289,6 @@ def main(args: InferenceArgs) -> None:
     if accelerator.is_main_process:
         output_dir.mkdir(parents=True, exist_ok=True)
         manifest = {
-            "dataset_type": args.dataset_type,
             "task": args.task,
             "eval_data_json": str(Path(args.eval_data_json).resolve()),
             "dataset_items": total,

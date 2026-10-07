@@ -17,12 +17,7 @@ export AE_MODEL_PATH=${AE_MODEL_PATH:-checkpoints/base/flux2/ae.safetensors}
 export KLEIN_9B_BASE_MODEL_PATH=${KLEIN_9B_BASE_MODEL_PATH:-checkpoints/base/flux2/flux-2-klein-base-9b.safetensors}
 export QWEN3_8B_PATH=${QWEN3_8B_PATH:-checkpoints/base/flux2/qwen3-8b}
 
-# Usage: bash scripts/inference_flux2.sh [standard|ai|both] [--task albedo|mr] [extra Python args]
-# Modes: standard (TexVerse G-buffer assets), ai (in-the-wild meshes), both.
-MODE=standard
-case "${1:-}" in
-    standard|ai|both) MODE=$1; shift ;;
-esac
+# Usage: bash scripts/inference_flux2.sh [--task albedo|mr] [extra Python args]
 # --task mr predicts the metallic-roughness map with the MR LoRA.
 TASK=${TASK:-albedo}
 ARGS=()
@@ -45,11 +40,9 @@ else
     CHECKPOINT=${CHECKPOINT:-checkpoints/flux2/lora}
 fi
 DECODER_CKPT=${DECODER_CKPT:-checkpoints/flux2/decoder.pt}
-STANDARD_JSON=${STANDARD_JSON:-${EVAL_JSON:-data/demo.json}}
-AI_JSON=${AI_JSON:-data/demo.json}
+EVAL_JSON=${EVAL_JSON:-data/eval_demo.json}
 ARCHIVE_ROOT=${ARCHIVE_ROOT:-outputs/inference_flux2}
-STANDARD_OUTPUT=${STANDARD_OUTPUT:-${ARCHIVE_ROOT}/${TASK}/standard}
-AI_OUTPUT=${AI_OUTPUT:-${ARCHIVE_ROOT}/${TASK}/ai_generated}
+OUTPUT_DIR=${OUTPUT_DIR:-${ARCHIVE_ROOT}/${TASK}}
 
 for path in "${AE_MODEL_PATH}" "${KLEIN_9B_BASE_MODEL_PATH}" "${CHECKPOINT}/dit_lora.safetensors" "${DECODER_CKPT}"; do
     if [[ ! -f "${path}" ]]; then
@@ -84,28 +77,17 @@ elif [[ -n "${MAIN_PROCESS_PORT:-}" ]]; then
     LAUNCH_ARGS+=(--main_process_port "${MAIN_PROCESS_PORT}")
 fi
 
-run_one() {
-    local dataset_type=$1 json=$2 output=$3
-    shift 3
-    if [[ ! -f "${json}" ]]; then
-        echo "Inference JSON is missing: ${json}" >&2
-        return 1
-    fi
-    accelerate launch "${LAUNCH_ARGS[@]}" inference_flux2.py \
-        --dataset_type "${dataset_type}" \
-        --task "${TASK}" \
-        --eval_data_json "${json}" \
-        --resume_from_checkpoint "${CHECKPOINT}" \
-        --decoder_ckpt "${DECODER_CKPT}" \
-        --project_dir "${output}" \
-        --save_raw_result true \
-        --save_composite true \
-        "$@"
-}
+if [[ ! -f "${EVAL_JSON}" ]]; then
+    echo "Inference JSON is missing: ${EVAL_JSON}" >&2
+    exit 1
+fi
 
-if [[ "${MODE}" == standard || "${MODE}" == both ]]; then
-    run_one standard "${STANDARD_JSON}" "${STANDARD_OUTPUT}" "$@"
-fi
-if [[ "${MODE}" == ai || "${MODE}" == both ]]; then
-    run_one ai "${AI_JSON}" "${AI_OUTPUT}" "$@"
-fi
+accelerate launch "${LAUNCH_ARGS[@]}" inference_flux2.py \
+    --task "${TASK}" \
+    --eval_data_json "${EVAL_JSON}" \
+    --resume_from_checkpoint "${CHECKPOINT}" \
+    --decoder_ckpt "${DECODER_CKPT}" \
+    --project_dir "${OUTPUT_DIR}" \
+    --save_raw_result true \
+    --save_composite true \
+    "$@"
